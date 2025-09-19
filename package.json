@@ -1,0 +1,21 @@
+{
+  "name": "flowman-cli",
+  "version": "1.0.0",
+  "description": "Transform your Postman collections into powerful automated workflows with breakpoint control and interactive execution.",
+  "main": "bin/index.js",
+  "bin": {
+    "flowman-cli": "bin/flowman.js"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "postman",
+    "cli",
+    "api",
+    "worksflow",
+    "automation"
+  ],
+  "author": "Hesham Adel",
+  "license": "MIT"
+}
