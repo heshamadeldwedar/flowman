@@ -26,16 +26,26 @@ class CommandLoader {
       try {
         const fileUrl = pathToFileURL(commandFile).href;
         const commandModule = await import(fileUrl);
-        const actualModule = commandModule.default || commandModule;
 
-        if (actualModule && typeof actualModule.register === 'function') {
-          // If command has a register function, call it
-          actualModule.register(program);
-        } else if (actualModule && actualModule.commands) {
-          // If command exports a commands array, register each command
-          this.registerCommandsFromModule(program, actualModule);
+        // Get command name from filename (e.g., login.js -> login)
+        const commandName = path.basename(commandFile, '.js');
+
+        // Check if module exports run function and help
+        if (commandModule.run && typeof commandModule.run === 'function') {
+          const command = program.command(commandName);
+
+          // Set description from help (can be string or function)
+          if (commandModule.help) {
+            const description = typeof commandModule.help === 'function'
+              ? commandModule.help()
+              : commandModule.help;
+            command.description(description);
+          }
+
+          // Register the run function as the action
+          command.action(commandModule.run);
         } else {
-          Logger.warn(`Invalid command format in ${commandFile}`);
+          Logger.warn(`Command file ${commandFile} must export 'run' function`);
         }
       } catch (error) {
         Logger.error(`Error loading command from ${commandFile}:`, error.message);
@@ -43,53 +53,6 @@ class CommandLoader {
     }
   }
 
-  /**
-   * Register commands from a module that exports commands array
-   * @param {Object} program - Commander.js program instance
-   * @param {Object} commandModule - Module containing commands
-   */
-  static registerCommandsFromModule(program, commandModule) {
-    const { name, description, commands } = commandModule;
-
-    if (!commands || !Array.isArray(commands)) {
-      Logger.warn(`No commands array found in module: ${name}`);
-      return;
-    }
-
-    // Create a parent command if name is provided
-    let parentCommand = program;
-    if (name && name !== 'root') {
-      parentCommand = program.command(name);
-      if (description) {
-        parentCommand.description(description);
-      }
-    }
-
-    // Register each command
-    commands.forEach(cmd => {
-      const command = parentCommand.command(cmd.command);
-
-      if (cmd.description) {
-        command.description(cmd.description);
-      }
-
-      if (cmd.options) {
-        cmd.options.forEach(option => {
-          command.option(option.flags, option.description, option.defaultValue);
-        });
-      }
-
-      if (cmd.arguments) {
-        cmd.arguments.forEach(arg => {
-          command.argument(arg.name, arg.description);
-        });
-      }
-
-      if (cmd.action) {
-        command.action(cmd.action);
-      }
-    });
-  }
 }
 
 export default CommandLoader;
