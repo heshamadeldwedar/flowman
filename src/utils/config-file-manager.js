@@ -1,8 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const ShellDetector = require('./shell-detector');
-const Logger = require('./logger');
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { createRequire } from 'module';
+import ShellDetector from './shell-detector.js';
+import Logger from './logger.js';
+
+const require = createRequire(import.meta.url);
 
 class ConfigFileManager {
   /**
@@ -199,4 +202,4 @@ class ConfigFileManager {
   }
 }
 
-module.exports = ConfigFileManager;
+export default ConfigFileManager;

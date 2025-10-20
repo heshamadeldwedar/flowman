@@ -1,5 +1,5 @@
-const fs = require('fs');
-const Logger = require('./logger');
+import fs from 'fs';
+import Logger from './logger.js';
 
 class Validator {
   /**
@@ -184,4 +184,4 @@ class Validator {
   }
 }
 
-module.exports = Validator;
+export default Validator;

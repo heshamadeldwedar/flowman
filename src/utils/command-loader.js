@@ -1,6 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const Logger = require('./logger');
+import fs from 'fs';
+import path from 'path';
+import { pathToFileURL } from 'url';
+import Logger from './logger.js';
 
 class CommandLoader {
   /**
@@ -8,7 +9,7 @@ class CommandLoader {
    * @param {Object} program - Commander.js program instance
    * @param {string} commandsDir - Directory containing command files
    */
-  static loadCommands(program, commandsDir) {
+  static async loadCommands(program, commandsDir) {
     const commandsPath = path.resolve(commandsDir);
 
     if (!fs.existsSync(commandsPath)) {
@@ -21,23 +22,25 @@ class CommandLoader {
       .filter(file => file.endsWith('.js'))
       .map(file => path.join(commandsPath, file));
 
-    commandFiles.forEach(commandFile => {
+    for (const commandFile of commandFiles) {
       try {
-        const commandModule = require(commandFile);
+        const fileUrl = pathToFileURL(commandFile).href;
+        const commandModule = await import(fileUrl);
+        const actualModule = commandModule.default || commandModule;
 
-        if (commandModule && typeof commandModule.register === 'function') {
+        if (actualModule && typeof actualModule.register === 'function') {
           // If command has a register function, call it
-          commandModule.register(program);
-        } else if (commandModule && commandModule.commands) {
+          actualModule.register(program);
+        } else if (actualModule && actualModule.commands) {
           // If command exports a commands array, register each command
-          this.registerCommandsFromModule(program, commandModule);
+          this.registerCommandsFromModule(program, actualModule);
         } else {
           Logger.warn(`Invalid command format in ${commandFile}`);
         }
       } catch (error) {
         Logger.error(`Error loading command from ${commandFile}:`, error.message);
       }
-    });
+    }
   }
 
   /**
@@ -89,4 +92,4 @@ class CommandLoader {
   }
 }
 
-module.exports = CommandLoader;
+export default CommandLoader;

@@ -1,6 +1,6 @@
-const os = require('os');
-const path = require('path');
-const fs = require('fs');
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
 
 class ShellDetector {
   /**
@@ -111,4 +111,4 @@ class ShellDetector {
   }
 }
 
-module.exports = ShellDetector;
+export default ShellDetector;

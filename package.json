@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Transform your Postman collections into powerful automated workflows with breakpoint control and interactive execution.",
   "main": "bin/index.js",
+  "type": "module",
   "bin": {
     "flowman-cli": "bin/flowman.js"
   },

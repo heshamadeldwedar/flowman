@@ -1,5 +1,5 @@
-const axios = require('axios');
-const Logger = require('../utils/logger');
+import axios from 'axios';
+import Logger from '../utils/logger.js';
 
 class PostmanClient {
   static BASE_URL = 'https://api.getpostman.com';
@@ -229,4 +229,4 @@ class PostmanClient {
   }
 }
 
-module.exports = PostmanClient;
+export default PostmanClient;

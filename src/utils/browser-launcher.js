@@ -1,8 +1,8 @@
-const open = require('open');
-const express = require('express');
-const http = require('http');
-const Logger = require('./logger');
-const Validator = require('./validator');
+import open from 'open';
+import express from 'express';
+import http from 'http';
+import Logger from './logger.js';
+import Validator from './validator.js';
 
 class BrowserLauncher {
   /**
@@ -249,4 +249,4 @@ class BrowserLauncher {
   }
 }
 
-module.exports = BrowserLauncher;
+export default BrowserLauncher;

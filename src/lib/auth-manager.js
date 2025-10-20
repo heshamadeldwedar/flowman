@@ -1,5 +1,5 @@
-const CredentialStorage = require('./credential-storage');
-const Logger = require('../utils/logger');
+import CredentialStorage from './credential-storage.js';
+import Logger from '../utils/logger.js';
 
 class AuthManager {
   /**
@@ -93,7 +93,7 @@ class AuthManager {
 
     try {
       // This will be implemented when we create the Postman client
-      const PostmanClient = require('./postman-client');
+      const { default: PostmanClient } = await import('./postman-client.js');
       return await PostmanClient.validateApiKey(apiKey);
     } catch (error) {
       Logger.debug('Credential validation failed:', error.message);
@@ -194,4 +194,4 @@ class AuthManager {
   }
 }
 
-module.exports = AuthManager;
+export default AuthManager;

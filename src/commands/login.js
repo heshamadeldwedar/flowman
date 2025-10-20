@@ -1,9 +1,9 @@
-const { intro, outro, text, select, confirm, spinner, note } = require('@clack/prompts');
-const AuthManager = require('../lib/auth-manager');
-const PostmanClient = require('../lib/postman-client');
-const BrowserLauncher = require('../utils/browser-launcher');
-const Logger = require('../utils/logger');
-const chalk = require('chalk');
+import { intro, outro, text, select, confirm, spinner, note } from '@clack/prompts';
+import AuthManager from '../lib/auth-manager.js';
+import PostmanClient from '../lib/postman-client.js';
+import BrowserLauncher from '../utils/browser-launcher.js';
+import Logger from '../utils/logger.js';
+import chalk from 'chalk';
 
 class LoginCommand {
   /**
@@ -249,7 +249,7 @@ class LoginCommand {
 }
 
 // Export command configuration for the auto-loader
-module.exports = {
+export default {
   name: 'login',
   description: 'Manage Postman authentication',
   commands: [

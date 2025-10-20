@@ -1,6 +1,6 @@
-const ConfigFileManager = require('../utils/config-file-manager');
-const Validator = require('../utils/validator');
-const Logger = require('../utils/logger');
+import ConfigFileManager from '../utils/config-file-manager.js';
+import Validator from '../utils/validator.js';
+import Logger from '../utils/logger.js';
 
 class CredentialStorage {
   static POSTMAN_API_KEY = 'POSTMAN_API_KEY';
@@ -177,4 +177,4 @@ class CredentialStorage {
   }
 }
 
-module.exports = CredentialStorage;
+export default CredentialStorage;
