@@ -30,22 +30,58 @@ class CommandLoader {
         // Get command name from filename (e.g., login.js -> login)
         const commandName = path.basename(commandFile, '.js');
 
-        // Check if module exports run function and help
-        if (commandModule.run && typeof commandModule.run === 'function') {
-          const command = program.command(commandName);
+        // Check if module exports run function or array of sub-commands
+        if (commandModule.run) {
+          // Check if run is an array of sub-commands
+          if (Array.isArray(commandModule.run)) {
+            const parentCommand = program.command(commandName);
 
-          // Set description from help (can be string or function)
-          if (commandModule.help) {
-            const description = typeof commandModule.help === 'function'
-              ? commandModule.help()
-              : commandModule.help;
-            command.description(description);
+            // Set description from help (can be string or function)
+            if (commandModule.help) {
+              const description = typeof commandModule.help === 'function'
+                ? commandModule.help()
+                : commandModule.help;
+              parentCommand.description(description);
+            }
+
+            // Register each sub-command
+            for (const subCommand of commandModule.run) {
+              if (subCommand.name && typeof subCommand.run === 'function') {
+                const subCmd = parentCommand.command(subCommand.name);
+
+                // Set description from help
+                if (subCommand.help) {
+                  const subDescription = typeof subCommand.help === 'function'
+                    ? subCommand.help()
+                    : subCommand.help;
+                  subCmd.description(subDescription);
+                }
+
+                // Register the run function as the action
+                subCmd.action(subCommand.run);
+              } else {
+                Logger.warn(`Sub-command in ${commandFile} must have 'name' and 'run' properties`);
+              }
+            }
+          } else if (typeof commandModule.run === 'function') {
+            // Single command - existing behavior
+            const command = program.command(commandName);
+
+            // Set description from help (can be string or function)
+            if (commandModule.help) {
+              const description = typeof commandModule.help === 'function'
+                ? commandModule.help()
+                : commandModule.help;
+              command.description(description);
+            }
+
+            // Register the run function as the action
+            command.action(commandModule.run);
+          } else {
+            Logger.warn(`Command file ${commandFile} must export 'run' as function or array of sub-commands`);
           }
-
-          // Register the run function as the action
-          command.action(commandModule.run);
         } else {
-          Logger.warn(`Command file ${commandFile} must export 'run' function`);
+          Logger.warn(`Command file ${commandFile} must export 'run' function or array`);
         }
       } catch (error) {
         Logger.error(`Error loading command from ${commandFile}:`, error.message);

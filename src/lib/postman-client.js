@@ -4,6 +4,8 @@ import Logger from '../utils/logger.js';
 class PostmanClient {
   static BASE_URL = 'https://api.getpostman.com';
 
+  static client = null;
+
   /**
    * Create axios instance with default config
    * @param {string} apiKey - Postman API key

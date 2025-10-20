@@ -118,6 +118,16 @@ class AuthManager {
     return CredentialStorage.getWorkspaceId();
   }
 
+
+  /**
+   * 
+   * @param {string} workspaceId 
+   * @returns boolean True if workspace switch successful
+   */
+  static setCurrentWorkspace(workspaceId) {
+    return CredentialStorage.storeWorkspaceId(workspaceId);
+  }
+
   /**
    * Mask API key for display purposes
    * @param {string} apiKey - The API key to mask
@@ -145,20 +155,8 @@ class AuthManager {
     }
   }
 
-  /**
-   * Get authentication headers for API requests
-   * @returns {Object} Headers object with authentication
-   */
-  static getAuthHeaders() {
-    const apiKey = CredentialStorage.getApiKey();
-    if (!apiKey) {
-      throw new Error('No API key found. Please authenticate first.');
-    }
-
-    return {
-      'X-API-Key': apiKey,
-      'Content-Type': 'application/json'
-    };
+  static getApiKey() {
+    return CredentialStorage.getApiKey();
   }
 
   /**
