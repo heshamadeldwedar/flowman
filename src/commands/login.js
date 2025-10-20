@@ -1,7 +1,6 @@
-import { intro, outro, text, select, confirm, spinner, note } from '@clack/prompts';
+import { intro, outro, text, confirm, spinner, note } from '@clack/prompts';
 import AuthManager from '../lib/auth-manager.js';
 import PostmanClient from '../lib/postman-client.js';
-import BrowserLauncher from '../utils/browser-launcher.js';
 import Logger from '../utils/logger.js';
 import chalk from 'chalk';
 
@@ -61,36 +60,6 @@ async function handleApiKeyLogin() {
 }
 
 /**
- * Handle browser-based OAuth login
- */
-async function handleBrowserLogin() {
-  note(
-    'Browser authentication is not yet implemented.\n' +
-    'This feature will redirect you to Postman\'s OAuth page.\n' +
-    'For now, please use the API key option.',
-    'Coming Soon'
-  );
-
-  const useApiKey = await confirm({
-    message: 'Would you like to use API key authentication instead?',
-    initialValue: true
-  });
-
-  if (useApiKey) {
-    await handleApiKeyLogin();
-  } else {
-    outro(chalk.yellow('Authentication cancelled'));
-  }
-
-  // TODO: Implement OAuth flow
-  // This would involve:
-  // 1. Setting up OAuth app in Postman
-  // 2. Building OAuth URL with proper client_id
-  // 3. Launching browser and handling callback
-  // 4. Exchanging code for access token
-}
-
-/**
  * Main login command
  */
 export async function run(options) {
@@ -110,28 +79,8 @@ export async function run(options) {
       }
     }
 
-    // Get authentication method
-    const authMethod = await select({
-      message: 'How would you like to authenticate?',
-      options: [
-        {
-          value: 'api-key',
-          label: 'Enter API Key manually',
-          hint: 'Paste your Postman API key'
-        },
-        {
-          value: 'browser',
-          label: 'Login via browser (OAuth)',
-          hint: 'Opens browser for authentication'
-        }
-      ]
-    });
-
-    if (authMethod === 'api-key') {
-      await handleApiKeyLogin();
-    } else if (authMethod === 'browser') {
-      await handleBrowserLogin();
-    }
+    // Proceed with API key login
+    await handleApiKeyLogin();
 
   } catch (error) {
     if (error.message === 'cancelled') {
