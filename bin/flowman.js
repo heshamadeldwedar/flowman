@@ -13,9 +13,7 @@ const __dirname = dirname(__filename);
 const require = createRequire(import.meta.url);
 const packageJson = require('../package.json');
 
-// Main async function
 (async () => {
-  // Set up the CLI program
   program
     .name(packageJson.name)
     .description(packageJson.description)
@@ -32,7 +30,6 @@ const packageJson = require('../package.json');
     process.exit(1);
   });
 
-  // Parse command line arguments
   program.parse();
 
   // Show help if no command is provided
