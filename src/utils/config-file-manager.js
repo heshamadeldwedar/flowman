@@ -189,7 +189,7 @@ class ConfigFileManager {
     };
 
     const pattern = patterns[shell] || patterns.bash;
-    return content.replace(pattern, '').replace(/\n\s*\n\s*\n/g, '\n\n'); // Clean up extra newlines
+    return content.replace(pattern, '').replace(/\n\s*\n\s*\n/g, '\n\n');
   }
 
   /**
