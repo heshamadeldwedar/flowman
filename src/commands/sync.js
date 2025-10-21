@@ -1,29 +1,44 @@
-import { intro, outro, spinner, note } from '@clack/prompts';
+import {  outro, spinner, } from '@clack/prompts';
 import AuthManager from '../lib/auth-manager.js';
-import PostmanClient from '../lib/postman-client.js';
 import Logger from '../utils/logger.js';
 import chalk from 'chalk';
-import CredentialStorage from '../lib/credential-storage.js';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
 
 /**
  * Main Sync command
  */
 export async function run(options) {
 
-  intro(chalk.blue('🔄 Sync Collections'));
 
-  const gitRepo = CredentialStorage.getGitRepoPath();
-  if (!gitRepo) {
-    outro(
-      `${chalk.red(`No git repository found. Please add a git repo first by running`)} ${chalk.blue(`${require('../../package.json').name} git add`)}`
-    );
+  const s = spinner();
+
+  s.start(chalk.blue('🔄 Sync Collections with GIT'));
+  try {
+    
+    const { hasApiKey, hasWorkspace, hasGitRepoPath } = AuthManager.getAuthStatus();
+
+    // validations
+    if (!hasApiKey) {
+      s.stop('No API key found. Please login first. using flowman-cli login');
+    }
+    if (!hasWorkspace) {
+      s.stop('No workspace selected. Please select a workspace first using flowman-cli workspace switch.');
+    }
+    if (!hasGitRepoPath) {
+      s.stop('No git repository found. Please add a git repo first using flowman-cli git add [path]');
+    }
+
+
+
+
+
+  } catch (error) {
+    s.stop('Failed to retrieve necessary credentials.');
+    Logger.error('Sync failed:', error.message);
+    outro(chalk.red('❌ Sync failed'));
     return;
   }
 
-
-
+  s.stop(chalk.green('✅ Sync completed successfully!'));
 }
 
 export const help = 'Sync local collections with Postman';
