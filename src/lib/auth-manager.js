@@ -115,7 +115,7 @@ class AuthManager {
    * @returns {string|null} Workspace ID or null
    */
   static getWorkspaceId() {
-    return CredentialStorage.getWorkspaceId();
+    return CredentialStorage.getCurrentWorkspaceId();
   }
 
 

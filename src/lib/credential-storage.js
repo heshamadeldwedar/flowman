@@ -74,7 +74,7 @@ class CredentialStorage {
    * Get stored Postman workspace ID
    * @returns {string|null} Workspace ID or null if not found
    */
-  static getWorkspaceId() {
+  static getCurrentWorkspaceId() {
     return ConfigFileManager.readEnvVariable(this.POSTMAN_WORKSPACE_ID);
   }
 
@@ -125,7 +125,7 @@ class CredentialStorage {
   static getAllCredentials() {
     return {
       apiKey: this.getApiKey(),
-      workspaceId: this.getWorkspaceId()
+      workspaceId: this.getCurrentWorkspaceId()
     };
   }
 
@@ -172,7 +172,7 @@ class CredentialStorage {
    * @returns {boolean} True if workspace ID format is valid
    */
   static validateStoredWorkspaceId() {
-    const workspaceId = this.getWorkspaceId();
+    const workspaceId = this.getCurrentWorkspaceId();
     return workspaceId ? Validator.validateWorkspaceId(workspaceId) : false;
   }
 }
