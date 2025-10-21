@@ -5,6 +5,7 @@ import Logger from '../utils/logger.js';
 class CredentialStorage {
   static POSTMAN_API_KEY = 'POSTMAN_API_KEY';
   static POSTMAN_WORKSPACE_ID = 'POSTMAN_WORKSPACE_ID';
+  static POSTMAN_GIT_REPO_PATH = 'POSTMAN_GIT_REPO_PATH';
 
   /**
    * Store Postman API key
@@ -125,7 +126,8 @@ class CredentialStorage {
   static getAllCredentials() {
     return {
       apiKey: this.getApiKey(),
-      workspaceId: this.getCurrentWorkspaceId()
+      workspaceId: this.getCurrentWorkspaceId(),
+      gitRepoPath: this.getGitRepoPath()
     };
   }
 
@@ -174,6 +176,28 @@ class CredentialStorage {
   static validateStoredWorkspaceId() {
     const workspaceId = this.getCurrentWorkspaceId();
     return workspaceId ? Validator.validateWorkspaceId(workspaceId) : false;
+  }
+
+  static storeGitRepoPath(repoPath) {
+    const success = ConfigFileManager.writeEnvVariable(
+      this.POSTMAN_GIT_REPO_PATH,
+      repoPath,
+      {
+        comment: 'Path to local Git repository for flowman-cli',
+        overwrite: true
+      }
+    );
+
+    if (success) {
+      process.env[this.POSTMAN_GIT_REPO_PATH] = repoPath;
+      Logger.success('Git repository path stored successfully');
+    }
+    
+    return success;
+  }
+
+  static getGitRepoPath() {
+    return ConfigFileManager.readEnvVariable(this.POSTMAN_GIT_REPO_PATH);
   }
 }
 

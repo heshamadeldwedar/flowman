@@ -18,13 +18,16 @@ class AuthManager {
     const credentials = CredentialStorage.getAllCredentials();
     const hasApiKey = !!credentials.apiKey;
     const hasWorkspace = !!credentials.workspaceId;
+    const hasGitRepoPath = !!credentials.gitRepoPath;
 
     return {
       authenticated: hasApiKey,
       hasApiKey,
       hasWorkspace,
+      hasGitRepoPath,
       apiKey: hasApiKey ? this.maskApiKey(credentials.apiKey) : null,
-      workspaceId: credentials.workspaceId
+      workspaceId: credentials.workspaceId,
+      gitRepoPath: credentials.gitRepoPath
     };
   }
 

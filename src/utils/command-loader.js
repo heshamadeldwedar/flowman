@@ -59,6 +59,12 @@ class CommandLoader {
 
                 // Register the run function as the action
                 subCmd.action(subCommand.run);
+
+
+                if (subCommand.arguments) {
+                  subCmd.arguments(subCommand.arguments);
+                }
+
               } else {
                 Logger.warn(`Sub-command in ${commandFile} must have 'name' and 'run' properties`);
               }

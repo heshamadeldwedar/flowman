@@ -43,7 +43,8 @@ export async function run(options) {
     const statusInfo = [
       `Status: ${chalk.green('Authenticated')}`,
       `API Key: ${chalk.gray(authStatus.apiKey)}`,
-      `Workspace: ${chalk.gray(authStatus.workspaceId || 'Not set')}`
+      `Workspace: ${chalk.gray(authStatus.workspaceId || 'Not set')}`,
+      `Git Repo: ${chalk.gray(authStatus.gitRepoPath || 'Not set')}`
     ];
 
     if (userInfo) {
